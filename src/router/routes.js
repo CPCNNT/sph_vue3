@@ -3,7 +3,8 @@ const Login = () => import('../views/Login/Login.vue')
 const Search = () => import('../views/Search/Search.vue')
 const Register = () => import('../views/Register.vue')
 const Detail = () => import('../views/Detail/Detail.vue')
-const AddCartSuccess = () => import('../views/AddCartSuccess.vue')
+const AddToCartSuccess = () => import('../views/AddToCartSuccess.vue')
+const Cart = () => import('../views/Cart/Cart.vue')
 
 export default [
   {
@@ -34,8 +35,12 @@ export default [
     component: Detail
   },
   {
-    path: '/addcartsuccess',
-    component: AddCartSuccess,
-    name: 'addcartsuccess'
+    path: '/addtocartsuccess',
+    component: AddToCartSuccess,
+    name: 'addtocartsuccess'
+  },
+  {
+    path: '/cart',
+    component: Cart
   }
 ]

@@ -366,7 +366,7 @@ async function addToCart() {
   try {
     await addToOrUpdateCart(route.params.skuId, skuNum.value)
     router.push({
-      name: 'addcartsuccess',
+      name: 'addtocartsuccess',
       query: { skuNum: skuNum.value }
     })
     sessionStorage.setItem('SKUINFO', JSON.stringify(skuInfo.value))
