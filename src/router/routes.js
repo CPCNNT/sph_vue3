@@ -3,6 +3,7 @@ const Login = () => import('../views/Login/Login.vue')
 const Search = () => import('../views/Search/Search.vue')
 const Register = () => import('../views/Register.vue')
 const Detail = () => import('../views/Detail/Detail.vue')
+const AddCartSuccess = () => import('../views/AddCartSuccess.vue')
 
 export default [
   {
@@ -31,5 +32,10 @@ export default [
   {
     path: '/detail/:skuId',
     component: Detail
+  },
+  {
+    path: '/addcartsuccess',
+    component: AddCartSuccess,
+    name: 'addcartsuccess'
   }
 ]

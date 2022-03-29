@@ -44,7 +44,9 @@
                 </div>
                 <div class="fixWidth">
                   <i class="red-bg">加价购</i>
-                  <em class="t-gray" >满999.00另加20.00元，或满1999.00另加30.00元，或满2999.00另加40.00元，即可在购物车换购热销商品</em>
+                  <em
+                    class="t-gray"
+                  >满999.00另加20.00元，或满1999.00另加30.00元，或满2999.00另加40.00元，即可在购物车换购热销商品</em>
                 </div>
               </div>
             </div>
@@ -75,12 +77,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum" />
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : ''">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addToCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -320,7 +322,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import TypeNav from '../../components/TypeNav.vue'
 import ImageList from './ImageList.vue'
@@ -328,9 +330,11 @@ import Zoom from './Zoom.vue'
 import { useDetailInfoStore } from '../../stores/detail.js'
 
 const route = useRoute()
+const router = useRouter()
 const { categoryView, skuInfo, spuSaleAttrList, skuImageList } = storeToRefs(useDetailInfoStore())
-const { getDetailInfo } = useDetailInfoStore()
+const { getDetailInfo, addToOrUpdateCart } = useDetailInfoStore()
 const currentImgIndex = ref(0)
+const skuNum = ref(1)
 
 onMounted(() => {
   getDetailInfo(route.params.skuId)
@@ -347,6 +351,28 @@ function selectValue(value, valueList) {
 
 function changeCurrentImgIndex(index) {
   currentImgIndex.value = index
+}
+
+function changeSkuNum(event) {
+  let val = event.target.value * 1
+  if (isNaN(val) || val < 1) {
+    skuNum.value = 1
+  } else {
+    skuNum.value = parseInt(val)
+  }
+}
+
+async function addToCart() {
+  try {
+    await addToOrUpdateCart(route.params.skuId, skuNum.value)
+    router.push({
+      name: 'addcartsuccess',
+      query: { skuNum: skuNum.value }
+    })
+    sessionStorage.setItem('SKUINFO', JSON.stringify(skuInfo.value))
+  } catch (error) {
+    alert(error)
+  }
 }
 </script>
 

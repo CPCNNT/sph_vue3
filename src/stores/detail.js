@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
-import { reqDetailInfo } from '../api/api.js'
+import { reqDetailInfo, reqAddToOrUpdateCart } from '../api/api.js'
 
 export const useDetailInfoStore = defineStore(
   'detailInfo',
@@ -13,6 +13,14 @@ export const useDetailInfoStore = defineStore(
         Object.assign(detailInfo, res.data)
       }
     }
+    async function addToOrUpdateCart(skuId, skuNum) {
+      const res = await reqAddToOrUpdateCart(skuId, skuNum)
+      if (res.code === 200) {
+        return res.message
+      } else {
+        return Promise.reject(res.message)
+      }
+    }
 
     const categoryView = computed(() => detailInfo.categoryView ?? {})
     const skuInfo = computed(() => detailInfo.skuInfo ?? {})
@@ -21,7 +29,7 @@ export const useDetailInfoStore = defineStore(
 
     return {
       detailInfo,
-      getDetailInfo,
+      getDetailInfo, addToOrUpdateCart,
       categoryView, skuInfo, spuSaleAttrList, skuImageList
     }
   }

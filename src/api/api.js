@@ -20,3 +20,8 @@ export const reqDetailInfo = skuId => request({
   url: `/item/${skuId}`,
   method: 'get'
 })
+
+export const reqAddToOrUpdateCart = (skuId, skuNum) => request({
+  url: `/cart/addToCart/${skuId}/${skuNum}`,
+  method: 'post'
+})
