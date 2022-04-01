@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { reqDetailInfo, reqAddToOrUpdateCart } from '../api/api.js'
+import { getUUID } from '../utils/uuidToken.js'
 
 export const useDetailInfoStore = defineStore(
   'detailInfo',
   () => {
     const detailInfo = reactive({})
+    const uuidToken = ref(getUUID())
 
     async function getDetailInfo(skuId) {
       const res = await reqDetailInfo(skuId)
@@ -28,7 +30,7 @@ export const useDetailInfoStore = defineStore(
     const skuImageList = computed(() => detailInfo.skuInfo?.skuImageList ?? [{}])
 
     return {
-      detailInfo,
+      detailInfo, uuidToken,
       getDetailInfo, addToOrUpdateCart,
       categoryView, skuInfo, spuSaleAttrList, skuImageList
     }

@@ -46,7 +46,7 @@ const handleMove = throttle( // 高频调用
       big.value.style.top = - 2 * top + 'px'
     }
   },
-  50
+  25
 )
 </script>
 

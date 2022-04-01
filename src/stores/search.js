@@ -30,9 +30,9 @@ export const useProductListStore = defineStore(
     async function getProductList(searchParams = {}) {
       const res = await reqProductList(searchParams)
       if (res.code === 200) {
-        Object.keys(productList).forEach(item => {
-          delete productList[item]
-        })
+        // Object.keys(productList).forEach(item => {
+        //   delete productList[item]
+        // })
         // Object.keys(res.data).forEach(item => {
         //   productList[item] = res.data[item]
         // })

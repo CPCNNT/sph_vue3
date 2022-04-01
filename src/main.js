@@ -9,8 +9,7 @@ const app = createApp(App)
 
 // app.component('TypeNav', TypeNav) // Global Registration
 
-app.use(router)
-
 app.use(createPinia())
+app.use(router)
 
 app.mount('#app')
