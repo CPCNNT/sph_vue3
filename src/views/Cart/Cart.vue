@@ -92,7 +92,9 @@ import { useCartListStore } from '../../stores/cart.js'
 import { useDetailInfoStore } from '../../stores/detail.js'
 // import throttle from 'lodash/throttle.js'
 
-const { getCartList, deleteCartItem, checkCartItem, deleteCheckedCartItems, checkAllCartItems } = useCartListStore()
+const {
+  getCartList, deleteCartItem, checkCartItem, deleteCheckedCartItems, checkAllCartItems
+} = useCartListStore()
 const { cartInfoList, totalNum, totalCost, isAllChecked } = storeToRefs(useCartListStore())
 const { addToOrUpdateCart } = useDetailInfoStore()
 
@@ -154,7 +156,7 @@ const changeNum = async (type, item, val) => {
     }
     try {
       await addToOrUpdateCart(item.skuId, numChange)
-      await getCartList()
+      getCartList()
     } catch (error) {
       console.log(error)
     }
