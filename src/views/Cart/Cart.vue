@@ -161,7 +161,8 @@ const changeNum = async (type, item, val) => {
       await addToOrUpdateCart(item.skuId, numChange)
       await getCartList()
     } catch (error) {
-      console.log(error)
+      // console.log(error)
+      alert(error)
     }
     canInteract.value = true
   }
@@ -174,7 +175,7 @@ async function deleteItem(item) {
       await deleteCartItem(item.skuId)
       await getCartList()
     } catch (error) {
-      alert(error.message)
+      alert(error)
     }
     canInteract.value = true
   }
@@ -187,7 +188,7 @@ async function checkItem(item, checked) {
     await checkCartItem(item.skuId, isChecked)
     await getCartList()
   } catch (error) {
-    alert(error.message)
+    alert(error)
   }
   canInteract.value = true
 }
@@ -199,7 +200,7 @@ async function deleteCheckedItems() {
       await deleteCheckedCartItems()
       await getCartList()
     } catch (error) {
-      alert(error.message)
+      alert(error)
     }
     canInteract.value = true
   }
@@ -212,7 +213,7 @@ async function checkAllItems(event) {
     await checkAllCartItems(isChecked)
     await getCartList()
   } catch (error) {
-    alert(error.message)
+    alert(error)
   }
   canInteract.value = true
 }

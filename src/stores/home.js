@@ -2,18 +2,18 @@ import { defineStore } from "pinia"
 import { reactive } from "vue"
 import { reqBaseCategoryList, reqBanners, reqFloors } from "../api/api.js"
 
-// export const useBaseCategoryListStore = defineStore('baseCategoryList', {
-//   state: () => ({ baseCategoryList: [] }),
-//   actions: {
-//     async getBaseCategoryList() {
-//       const res = await reqBaseCategoryList()
-//       if (res.code === 200) {
-//         this.baseCategoryList = res.data
-//       }
-//     }
-//   },
-//   getters: {}
-// })
+/* export const useBaseCategoryListStore = defineStore('baseCategoryList', {
+  state: () => ({ baseCategoryList: [] }),
+  actions: {
+    async getBaseCategoryList() {
+      const res = await reqBaseCategoryList()
+      if (res.code === 200) {
+        this.baseCategoryList = res.data
+      }
+    }
+  },
+  getters: {}
+}) */
 export const useBaseCategoryListStore = defineStore(
   'baseCategoryList',
   () => {

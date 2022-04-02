@@ -40,3 +40,14 @@ export const reqCheckCartItem = (skuId, isChecked) => request({
   url: `/cart/checkCart/${skuId}/${isChecked}`,
   method: 'get'
 })
+
+export const reqVerificationCode = phone => request({
+  url: `/user/passport/sendCode/${phone}`,
+  method: 'get'
+})
+
+export const reqRegister = userInfo => request({
+  url: '/user/passport/register',
+  data: userInfo,
+  method: 'post'
+})

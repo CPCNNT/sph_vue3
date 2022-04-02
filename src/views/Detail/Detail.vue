@@ -371,7 +371,7 @@ async function addToCart() {
     })
     sessionStorage.setItem('SKUINFO', JSON.stringify(skuInfo.value))
   } catch (error) {
-    alert(error.message)
+    alert(error)
   }
 }
 </script>

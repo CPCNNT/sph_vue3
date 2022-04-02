@@ -11,32 +11,32 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" />
+        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" />
-        <img ref="code" src="http://182.92.128.115/api/user/passport/code" alt="code" />
+        <input type="text" placeholder="请输入验证码" v-model="code" />
+        <button @click="getCode">获取验证码</button>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="text" placeholder="请输入你的登录密码" />
+        <input type="password" placeholder="请输入你的登录密码" v-model="password" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" />
+        <input type="password" placeholder="请输入确认密码" v-model="password2" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" />
+        <input name="m1" type="checkbox" v-model="agree" />
         <span>同意协议并注册《尚品汇用户协议》</span>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="btn">
-        <button>完成注册</button>
+        <button @click="register">完成注册</button>
       </div>
     </div>
 
@@ -59,6 +59,46 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '../stores/user.js'
+import { useRouter } from 'vue-router'
+
+const phone = ref('')
+const code = ref('')
+const password = ref('')
+const password2 = ref('')
+const agree = ref(false)
+
+const { getVerificationCode, userRegister } = useUserStore()
+const { vCode } = storeToRefs(useUserStore())
+const router = useRouter()
+
+async function getCode() {
+  try {
+    if (phone.value) {
+      await getVerificationCode(phone.value)
+      code.value = vCode.value
+    }
+  } catch (error) {
+    alert(error)
+  }
+}
+
+async function register() {
+  try {
+    if (phone.value && code.value && password.value && password2.value === password.value && agree.value) {
+      await userRegister({
+        phone: phone.value,
+        code: code.value,
+        password: password.value
+      })
+      router.push('/login')
+    }
+  } catch (error) {
+    alert(error)
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -92,6 +132,12 @@
       margin-top: 40px;
     }
 
+    div:nth-of-type(2) button {
+      height: 32px;
+      margin: 4px;
+      padding: 0 4px;
+    }
+
     .content {
       padding-left: 390px;
       margin-bottom: 18px;
@@ -112,10 +158,6 @@
         margin-left: 5px;
         outline: none;
         border: 1px solid #999;
-      }
-
-      img {
-        vertical-align: sub;
       }
 
       .error-msg {
