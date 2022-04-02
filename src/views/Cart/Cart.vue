@@ -63,7 +63,7 @@
           :disabled="!canInteract"
           @change="checkAllItems"
         />
-        <span>全选</span>
+        <span>&nbsp;全选</span>
       </div>
       <div class="option">
         <a @click="deleteCheckedItems">删除选中的商品</a>
