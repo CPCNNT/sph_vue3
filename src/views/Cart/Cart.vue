@@ -17,6 +17,7 @@
               type="checkbox"
               name="chk_list"
               :checked="item.isChecked === 1"
+              :disabled="!canInteract"
               @change="checkItem(item, $event.target.checked)"
             />
           </li>
@@ -59,6 +60,7 @@
           class="chooseAll"
           type="checkbox"
           :checked="isAllChecked && cartInfoList.length > 0"
+          :disabled="!canInteract"
           @change="checkAllItems"
         />
         <span>全选</span>
@@ -86,7 +88,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCartListStore } from '../../stores/cart.js'
 import { useDetailInfoStore } from '../../stores/detail.js'
@@ -98,8 +100,10 @@ const {
 const { cartInfoList, totalNum, totalCost, isAllChecked } = storeToRefs(useCartListStore())
 const { addToOrUpdateCart } = useDetailInfoStore()
 
-onMounted(() => {
-  getCartList()
+const canInteract = ref(true)
+
+onMounted(async () => {
+  await getCartList()
 })
 
 /* const changeNum = throttle(
@@ -132,10 +136,9 @@ onMounted(() => {
   1000
 ) */
 // throttle is not the perfect solution, the following is my own one to user's frequent interaction
-let canInteract = true
 const changeNum = async (type, item, val) => {
-  if (canInteract) {
-    canInteract = false
+  if (canInteract.value) {
+    canInteract.value = false
     let numChange = 0
     switch (type) {
       case 'mins':
@@ -156,54 +159,62 @@ const changeNum = async (type, item, val) => {
     }
     try {
       await addToOrUpdateCart(item.skuId, numChange)
-      getCartList()
+      await getCartList()
     } catch (error) {
       console.log(error)
     }
-    canInteract = true
+    canInteract.value = true
   }
 }
 
 async function deleteItem(item) {
+  canInteract.value = false
   if (window.confirm(`确认删除【${item.skuName}】吗?`)) {
     try {
       await deleteCartItem(item.skuId)
-      getCartList()
+      await getCartList()
     } catch (error) {
       alert(error.message)
     }
+    canInteract.value = true
   }
 }
 
 async function checkItem(item, checked) {
+  canInteract.value = false
   const isChecked = checked ? '1' : '0'
   try {
     await checkCartItem(item.skuId, isChecked)
-    getCartList()
+    await getCartList()
   } catch (error) {
     alert(error.message)
   }
+  canInteract.value = true
 }
 
 async function deleteCheckedItems() {
+  canInteract.value = false
   if (window.confirm('确认删除选中的商品吗？')) {
     try {
       await deleteCheckedCartItems()
-      getCartList()
+      await getCartList()
     } catch (error) {
       alert(error.message)
     }
+    canInteract.value = true
   }
 }
 
 async function checkAllItems(event) {
+  canInteract.value = false
   const isChecked = event.target.checked ? '1' : '0'
   try {
     await checkAllCartItems(isChecked)
-    getCartList()
+    await getCartList()
   } catch (error) {
     alert(error.message)
   }
+  canInteract.value = true
 }
 </script>
 

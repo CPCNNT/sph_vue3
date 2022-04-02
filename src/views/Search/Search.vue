@@ -264,8 +264,8 @@ onBeforeMount(
 )
 
 onMounted(
-  () => {
-    getSearchData()
+  async () => {
+    await getSearchData()
   }
 )
 
@@ -278,11 +278,11 @@ onMounted(
 watch(
   // route,
   () => route.fullPath,
-  (newValue, oldValue) => {
+  async (newValue, oldValue) => {
     // console.log(newValue, oldValue)
     resetCategoryId()
     updateSearchParams(route.query, route.params)
-    getSearchData()
+    await getSearchData()
   }
 )
 
@@ -300,28 +300,28 @@ function removeKeyword() {
   router.push({ name: 'search', query: route.query })
 }
 
-function removeTrademark() {
+async function removeTrademark() {
   resetTrademark()
-  getSearchData()
+  await getSearchData()
 }
 
-function searchAfterSettingTrademark(tm) {
+async function searchAfterSettingTrademark(tm) {
   updateTrademark(tm)
-  getSearchData()
+  await getSearchData()
 }
 
-function searchAfterAddingProp(prop) {
+async function searchAfterAddingProp(prop) {
   if (addProp(prop)) {
-    getSearchData()
+    await getSearchData()
   }
 }
 
-function removeProp(index) {
+async function removeProp(index) {
   deleteProp(index)
-  getSearchData()
+  await getSearchData()
 }
 
-function changeOrder(flag) {
+async function changeOrder(flag) {
   const originalFlag = sP.order.split(':')[0]
   const originalSort = sP.order.split(':')[1]
   let newOrder = ''
@@ -331,12 +331,12 @@ function changeOrder(flag) {
     newOrder = `${flag}:desc`
   }
   updateOrder(newOrder)
-  getSearchData()
+  await getSearchData()
 }
 
-function searchAfterSettingPageNo(pageNo) {
+async function searchAfterSettingPageNo(pageNo) {
   updatePageNo(pageNo)
-  getSearchData()
+  await getSearchData()
 }
 </script>
 

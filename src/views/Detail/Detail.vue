@@ -336,8 +336,8 @@ const { getDetailInfo, addToOrUpdateCart } = useDetailInfoStore()
 const currentImgIndex = ref(0)
 const skuNum = ref(1)
 
-onMounted(() => {
-  getDetailInfo(route.params.skuId)
+onMounted(async () => {
+  await getDetailInfo(route.params.skuId)
 })
 
 function selectValue(value, valueList) {
@@ -371,7 +371,7 @@ async function addToCart() {
     })
     sessionStorage.setItem('SKUINFO', JSON.stringify(skuInfo.value))
   } catch (error) {
-    alert(error)
+    alert(error.message)
   }
 }
 </script>
