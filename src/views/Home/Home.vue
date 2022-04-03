@@ -19,13 +19,16 @@ import Brand from './Brand/Brand.vue'
 import { useBannersStore, useFloorsStore } from '../../stores/home.js'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useUserStore } from '../../stores/user.js'
 
 const { getBanners } = useBannersStore()
 const { getFloors } = useFloorsStore()
 const { floors } = storeToRefs(useFloorsStore())
+const { getUserInfo } = useUserStore()
 
 onMounted(async () => {
   await getBanners()
   await getFloors()
+  await getUserInfo()
 })
 </script>

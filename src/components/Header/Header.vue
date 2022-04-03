@@ -6,12 +6,16 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userName">
             <span>请</span>
             <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>
             <!-- <a href="###" class="register">免费注册</a> -->
             <router-link class="register" to="/register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <a>{{ userName }}</a>
+            <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -49,18 +53,20 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { useSearchParamsStore } from '../../stores/search.js'
-
-const router = useRouter()
-const route = useRoute()
+import { useUserStore } from '../../stores/user.js'
 
 const localKeyword = ref('')
 
+const router = useRouter()
+const route = useRoute()
 const { updateKeyword } = useSearchParamsStore()
 const { keyword } = storeToRefs(useSearchParamsStore())
+const { userName } = storeToRefs(useUserStore())
+const { userLogout } = useUserStore()
 
 function search() {
   if (localKeyword.value.trim() !== keyword.value) {
@@ -79,6 +85,15 @@ watch(
     localKeyword.value = newValue
   }
 )
+
+async function logout() {
+  try {
+    await userLogout()
+    router.push('/home')
+  } catch (error) {
+    alert(error)
+  }
+}
 </script>
 
 <style lang="less" scoped>

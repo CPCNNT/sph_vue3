@@ -46,8 +46,24 @@ export const reqVerificationCode = phone => request({
   method: 'get'
 })
 
-export const reqRegister = userInfo => request({
+export const reqRegister = registrationInfo => request({
   url: '/user/passport/register',
-  data: userInfo,
+  data: registrationInfo,
   method: 'post'
+})
+
+export const reqLogin = loginInfo => request({
+  url: '/user/passport/login',
+  data: loginInfo,
+  method: 'post'
+})
+
+export const reqUserInfo = () => request({
+  url: '/user/passport/auth/getUserInfo',
+  method: 'get'
+})
+
+export const reqLogout = () => request({
+  url: '/user/passport/logout',
+  method: 'get'
 })

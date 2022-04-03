@@ -1,10 +1,8 @@
 import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-// import { storeToRefs } from 'pinia'
-// import { useDetailInfoStore } from '../stores/detail.js'
-
-// const { uuidToken } = storeToRefs(useDetailInfoStore())
+import { useUserStore } from '../stores/user.js'
+import { storeToRefs } from 'pinia'
 
 // Turn off loading spinner by setting it to false. (default: true)
 NProgress.configure({ showSpinner: false })
@@ -16,12 +14,13 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    // if (uuidToken.value) {
-    //   config.headers.userTempId = uuidToken.value
-    // }
     const uuidToken = localStorage.getItem('UUIDTOKEN')
     if (uuidToken) {
       config.headers.userTempId = uuidToken
+    }
+    const { token } = storeToRefs(useUserStore())
+    if (token.value) {
+      config.headers.token = token.value
     }
     NProgress.start()
     return config
