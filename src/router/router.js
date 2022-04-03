@@ -15,7 +15,7 @@ router.beforeEach(async (to, from, next) => {
   const { getUserInfo, userLogout } = useUserStore()
   const { token, userName } = storeToRefs(useUserStore())
   if (token.value) {
-    if (to.path==='/login' || to.path === '/register') {
+    if (to.path === '/login' || to.path === '/register') {
       next('/home')
     } else {
       if (userName.value) {
