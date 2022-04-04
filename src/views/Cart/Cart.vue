@@ -80,7 +80,8 @@
           <i class="summoney">{{ totalCost }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <!-- <a class="sum-btn" @click="router.push('/trade')">结算</a> -->
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -93,12 +94,14 @@ import { storeToRefs } from 'pinia'
 import { useCartListStore } from '../../stores/cart.js'
 import { useDetailInfoStore } from '../../stores/detail.js'
 // import throttle from 'lodash/throttle.js'
+// import { useRouter } from 'vue-router'
 
 const {
   getCartList, deleteCartItem, checkCartItem, deleteCheckedCartItems, checkAllCartItems
 } = useCartListStore()
 const { cartInfoList, totalNum, totalCost, isAllChecked } = storeToRefs(useCartListStore())
 const { addToOrUpdateCart } = useDetailInfoStore()
+// const router = useRouter()
 
 const canInteract = ref(true)
 

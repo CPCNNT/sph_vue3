@@ -5,6 +5,8 @@ const Register = () => import('../views/Register.vue')
 const Detail = () => import('../views/Detail/Detail.vue')
 const AddToCartSuccess = () => import('../views/AddToCartSuccess.vue')
 const Cart = () => import('../views/Cart/Cart.vue')
+const Trade = () => import('../views/Trade/Trade.vue')
+const Pay = () => import('../views/Pay/Pay.vue')
 
 export default [
   {
@@ -42,5 +44,13 @@ export default [
   {
     path: '/cart',
     component: Cart
+  },
+  {
+    path: '/trade',
+    component: Trade
+  },
+  {
+    path: '/pay',
+    component: Pay
   }
 ]
