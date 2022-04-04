@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router/router.js'
 import { createPinia } from 'pinia'
 import './mock/mockServe.js'
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 const app = createApp(App)
 
@@ -11,5 +13,6 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(ElementPlus, { locale: zhCn })
 
 app.mount('#app')

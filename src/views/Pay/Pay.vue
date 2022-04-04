@@ -10,11 +10,11 @@
           <span class="fl">
             请您在提交订单
             <em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：
-            <em>145687</em>
+            <em>{{ orderId }}</em>
           </span>
           <span class="fr">
             <em class="lead">应付金额：</em>
-            <em class="orange money">￥17,654</em>
+            <em class="orange money">￥{{ totalFee }}</em>
           </span>
         </div>
       </div>
@@ -105,7 +105,8 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <router-link class="btn" to="/paysuccess">立即支付</router-link>
+          <!-- <router-link class="btn" to="/paysuccess">立即支付</router-link> -->
+          <a class="btn" @click="pay">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -124,6 +125,77 @@
 </template>
 
 <script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted } from 'vue'
+import { usePayStore } from "../../stores/pay.js"
+import { storeToRefs } from 'pinia'
+import { ElMessageBox } from 'element-plus'
+import 'element-plus/es/components/message-box/style/css'
+import QRCode from 'qrcode'
+import { reqPayStatus } from '../../api/api.js'
+
+const route = useRoute()
+const router = useRouter()
+const { getPayInfo } = usePayStore()
+const { totalFee, codeUrl } = storeToRefs(usePayStore())
+
+const orderId = computed(() => route.query.orderId)
+let timer = null
+let code = ''
+
+onMounted(async () => {
+  try {
+    await getPayInfo(orderId.value)
+  } catch (error) {
+    alert(error)
+  }
+})
+
+async function pay() {
+  const qrcodeUrl = await QRCode.toDataURL(codeUrl.value)
+  ElMessageBox.alert(
+    `<img src="${qrcodeUrl}" />`,
+    '请使用微信扫码支付',
+    {
+      dangerouslyUseHTMLString: true,
+      center: true,
+      showClose: false,
+      showCancelButton: true,
+      cancelButtonText: '支付遇见问题',
+      confirmButtonText: '已支付成功',
+      beforeClose: (action, instance, done) => {
+        if (action === 'cancel') {
+          alert('请联系管理员！')
+          clearInterval(timer)
+          timer = null
+          done()
+        } else {
+          // if (code === 200) {
+            clearInterval(timer)
+            timer = null
+            done()
+            router.push('/paysuccess')
+          // }
+        }
+      }
+    }
+  )
+  if (!timer) {
+    timer = setInterval(
+      async () => {
+        const res = await reqPayStatus()
+        if (res.code === 200) {
+          clearInterval(timer)
+          timer = null
+          code = res.code
+          ElMessageBox.close()
+          router.push('/paysuccess')
+        }
+      },
+      4000
+    )
+  }
+}
 </script>
 
 <style lang="less" scoped>

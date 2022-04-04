@@ -7,6 +7,7 @@ const AddToCartSuccess = () => import('../views/AddToCartSuccess.vue')
 const Cart = () => import('../views/Cart/Cart.vue')
 const Trade = () => import('../views/Trade/Trade.vue')
 const Pay = () => import('../views/Pay/Pay.vue')
+const PaySuccess = () => import('../views/PaySuccess/PaySuccess.vue')
 
 export default [
   {
@@ -52,5 +53,9 @@ export default [
   {
     path: '/pay',
     component: Pay
+  },
+  {
+    path: '/paysuccess',
+    component: PaySuccess
   }
 ]

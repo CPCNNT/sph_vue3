@@ -92,22 +92,25 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <!-- <router-link class="subBtn" to="/pay">提交订单</router-link> -->
+      <a class="subBtn" @click="submit">提交订单</a>
     </div>
   </div>
 </template>
-phoneNum
+
 <script setup>
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, computed, ref, toRaw } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useUserAddressListStore, useOrderInfoStore } from "../../stores/trade.js"
+import { useUserAddressListStore, useOrderStore } from "../../stores/trade.js"
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const { getUserAddressList } = useUserAddressListStore()
+const { userAddressList, defaultAddressId, selectedAddress } = storeToRefs(useUserAddressListStore())
+const { getOrderInfo, submitOrder } = useOrderStore()
+const { detailArrayList, totalNum, totalAmount, orderId } = storeToRefs(useOrderStore())
 
 const msg = ref('')
-
-const { getUserAddressList } = useUserAddressListStore()
-const { userAddressList, defaultAddressId } = storeToRefs(useUserAddressListStore())
-const { getOrderInfo } = useOrderInfoStore()
-const { detailArrayList, totalNum, totalAmount } = storeToRefs(useOrderInfoStore())
 
 onMounted(async () => {
   await getUserAddressList()
@@ -123,7 +126,23 @@ function changeSelectedAddress(address, addressList) {
   }
 }
 
-const selectedAddress = computed(() => userAddressList.value.find(item => item.isDefault === '1') ?? {})
+async function submit() {
+  try {
+    const submitData = {
+      consignee: selectedAddress.value.consignee,
+      consigneeTel: selectedAddress.value.phoneNum,
+      deliveryAddress: selectedAddress.value.fullAddress,
+      paymentWay: "ONLINE",
+      orderComment: msg.value.trim(),
+      orderDetailList: toRaw(detailArrayList.value)
+    }
+    // console.log(submitData)
+    await submitOrder(submitData)
+    router.push(`/pay?orderId=${orderId.value}`)
+  } catch (error) {
+    alert(error)
+  }
+}
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { computed, reactive, ref } from "vue"
-import { reqUserAddressList, reqOrderInfo } from "../api/api.js"
+import { reqUserAddressList, reqOrderInfo, reqSubmitOrder } from "../api/api.js"
 
 export const useUserAddressListStore = defineStore(
   'userAddressList',
@@ -21,16 +21,19 @@ export const useUserAddressListStore = defineStore(
       }
     }
 
+    const selectedAddress = computed(() => userAddressList.find(item => item.isDefault === '1') ?? {})
+
     return {
-      userAddressList, getUserAddressList, defaultAddressId
+      userAddressList, getUserAddressList, defaultAddressId, selectedAddress
     }
   }
 )
 
-export const useOrderInfoStore = defineStore(
-  'orderInfo',
+export const useOrderStore = defineStore(
+  'order',
   () => {
     const orderInfo = reactive({})
+    const orderId = ref(0)
 
     async function getOrderInfo() {
       const res = await reqOrderInfo()
@@ -39,13 +42,22 @@ export const useOrderInfoStore = defineStore(
         Object.assign(orderInfo, res.data)
       }
     }
+    async function submitOrder(data) {
+      const res = await reqSubmitOrder(orderInfo.tradeNo, data)
+      if (res.code === 200) {
+        orderId.value = res.data
+        return res.message
+      } else {
+        return Promise.reject(res.message)
+      }
+    }
 
     const detailArrayList = computed(() => orderInfo.detailArrayList ?? [])
     const totalNum = computed(() => detailArrayList.value.reduce((prev, cur) => prev + cur.skuNum, 0))
     const totalAmount = computed(() => orderInfo.totalAmount ?? 0)
 
     return {
-      orderInfo, getOrderInfo, detailArrayList, totalNum, totalAmount
+      orderInfo, orderId, getOrderInfo, submitOrder, detailArrayList, totalNum, totalAmount
     }
   }
 )
