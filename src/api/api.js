@@ -93,3 +93,8 @@ export const reqPayStatus = orderId => request({
   url: `/payment/weixin/queryPayStatus/${orderId}`,
   method: 'get'
 })
+
+export const reqMyOrders = (page, limit) => request({
+  url: `/order/auth/${page}/${limit}`,
+  method: 'get'
+})

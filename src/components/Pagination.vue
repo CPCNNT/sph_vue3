@@ -8,7 +8,7 @@
       v-show="startNumAndEndNum.start > 1"
       @click="emit('searchAfterSettingPageNo', 1)"
     >1</button>
-    <button v-show="startNumAndEndNum.start > 2">···</button>
+    <button v-show="startNumAndEndNum.start > 2" disabled>···</button>
 
     <button
       v-for="(pageNum, index) in pageNumList"
@@ -17,7 +17,7 @@
       @click="emit('searchAfterSettingPageNo', pageNum)"
     >{{ pageNum }}</button>
 
-    <button v-show="startNumAndEndNum.end < totalPages - 1">···</button>
+    <button v-show="startNumAndEndNum.end < totalPages - 1" disabled>···</button>
     <button
       v-show="startNumAndEndNum.end < totalPages"
       @click="emit('searchAfterSettingPageNo', totalPages)"

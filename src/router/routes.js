@@ -8,6 +8,9 @@ const Cart = () => import('../views/Cart/Cart.vue')
 const Trade = () => import('../views/Trade/Trade.vue')
 const Pay = () => import('../views/Pay/Pay.vue')
 const PaySuccess = () => import('../views/PaySuccess/PaySuccess.vue')
+const Center = () => import('../views/Center/Center.vue')
+const MyOrders = () => import('../views/Center/MyOrders.vue')
+const GroupOrders = () => import('../views/Center/GroupOrders.vue')
 
 export default [
   {
@@ -57,5 +60,23 @@ export default [
   {
     path: '/paysuccess',
     component: PaySuccess
+  },
+  {
+    path: '/center',
+    component: Center,
+    children: [
+      {
+        path: 'myorders',
+        component: MyOrders
+      },
+      {
+        path: 'grouporders',
+        component: GroupOrders
+      },
+      {
+        path: '/center',
+        redirect: '/center/myorders'
+      }
+    ]
   }
 ]
