@@ -75,13 +75,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../../stores/user.js'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const phone = ref('')
 const password = ref('')
 
 const { userLogin } = useUserStore()
 const router = useRouter()
+const route = useRoute()
 
 async function login() {
   try {
@@ -90,7 +91,7 @@ async function login() {
         phone: phone.value,
         password: password.value
       })
-      router.push('/home')
+      router.push(route.query.redirect ?? '/home')
     }
   } catch (error) {
     alert(error)

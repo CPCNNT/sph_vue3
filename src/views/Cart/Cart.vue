@@ -95,6 +95,7 @@ import { useCartListStore } from '../../stores/cart.js'
 import { useDetailInfoStore } from '../../stores/detail.js'
 // import throttle from 'lodash/throttle.js'
 // import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const {
   getCartList, deleteCartItem, checkCartItem, deleteCheckedCartItems, checkAllCartItems
@@ -220,6 +221,8 @@ async function checkAllItems(event) {
   }
   canInteract.value = true
 }
+
+onBeforeRouteLeave((to, from) => to.path === '/trade' && totalNum.value < 1 ? false : true)
 </script>
 
 <style lang="less" scoped>

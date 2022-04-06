@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref, toRaw } from 'vue'
+import { onMounted, ref, toRaw } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserAddressListStore, useOrderStore } from "../../stores/trade.js"
 import { useRouter } from 'vue-router'

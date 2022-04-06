@@ -125,8 +125,8 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
-import { computed, onMounted } from 'vue'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { usePayStore } from "../../stores/pay.js"
 import { storeToRefs } from 'pinia'
 import { ElMessageBox } from 'element-plus'
@@ -140,9 +140,6 @@ const { getPayInfo } = usePayStore()
 const { totalFee, codeUrl } = storeToRefs(usePayStore())
 
 const orderId = computed(() => route.query.orderId)
-let timer = null
-let code = ''
-
 onMounted(async () => {
   try {
     await getPayInfo(orderId.value)
@@ -151,6 +148,8 @@ onMounted(async () => {
   }
 })
 
+let timer = null
+let code = 200
 async function pay() {
   const qrcodeUrl = await QRCode.toDataURL(codeUrl.value)
   ElMessageBox.alert(
@@ -170,12 +169,12 @@ async function pay() {
           timer = null
           done()
         } else {
-          // if (code === 200) {
+          if (code === 200) {
             clearInterval(timer)
             timer = null
             done()
             router.push('/paysuccess')
-          // }
+          }
         }
       }
     }
@@ -187,7 +186,7 @@ async function pay() {
         if (res.code === 200) {
           clearInterval(timer)
           timer = null
-          code = res.code
+          // code = res.code
           ElMessageBox.close()
           router.push('/paysuccess')
         }
@@ -196,6 +195,12 @@ async function pay() {
     )
   }
 }
+onBeforeUnmount(() => {
+  clearInterval(timer)
+  timer = null
+})
+
+onBeforeRouteLeave((to, from) => to.path === '/paysuccess' && code === 200 ? true : false)
 </script>
 
 <style lang="less" scoped>

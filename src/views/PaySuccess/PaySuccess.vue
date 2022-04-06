@@ -15,7 +15,10 @@
   </div>
 </template>
 
-<script setup>
+<script>
+export default {
+  beforeRouteEnter: (to, from) => from.path === '/pay' || from.path === '/' ? true : false
+}
 </script>
 
 <style lang="less" scoped>

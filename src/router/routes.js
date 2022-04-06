@@ -51,11 +51,13 @@ export default [
   },
   {
     path: '/trade',
-    component: Trade
+    component: Trade,
+    beforeEnter: (to, from) => from.path === '/cart' || from.path === '/' ? true : false
   },
   {
     path: '/pay',
-    component: Pay
+    component: Pay,
+    beforeEnter: (to, from) => from.path === '/trade' || from.path === '/' ? true : false
   },
   {
     path: '/paysuccess',

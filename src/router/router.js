@@ -11,29 +11,36 @@ const router = createRouter({
   }
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   const { getUserInfo, userLogout } = useUserStore()
   const { token, userName } = storeToRefs(useUserStore())
   if (token.value) {
     if (to.path === '/login' || to.path === '/register') {
-      next('/home')
+      return '/home'
     } else {
       if (userName.value) {
-        next()
+        return true
       } else {
         try {
           await getUserInfo()
-          next()
+          return true
         } catch (error) {
           // token 失效了，需重新登陆
           // 清除 token
           await userLogout()
-          next('/login')
+          return '/login'
         }
       }
     }
   } else {
-    next()
+    const toPath = to.path
+    if (toPath.includes('trade') || toPath.includes('pay')) {
+      return '/login'
+    } else if (toPath.includes('center')) {
+      return `/login?redirect=${toPath}`
+    } else {
+      return true
+    }
   }
 })
 
