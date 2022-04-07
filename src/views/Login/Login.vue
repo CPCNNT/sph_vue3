@@ -17,11 +17,11 @@
             <form>
               <div class="input-text clearFix">
                 <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号" v-model="phone" />
+                <input type="text" name="phone" placeholder="邮箱/用户名/手机号" v-model="phone" />
               </div>
               <div class="input-text clearFix">
                 <span class="pwd"></span>
-                <input type="password" placeholder="请输入密码" v-model="password" />
+                <input type="password" name="password" placeholder="请输入密码" v-model="password" />
               </div>
               <div class="setting clearFix">
                 <label class="checkbox inline">
@@ -30,7 +30,7 @@
                 </label>
                 <span class="forget">忘记密码？</span>
               </div>
-              <button class="btn" @click.prevent="login">登&nbsp;&nbsp;录</button>
+              <button class="btn" @click="login" :disabled="isSubmitting">登&nbsp;&nbsp;录</button>
             </form>
 
             <div class="call clearFix">
@@ -76,15 +76,17 @@
 import { ref } from 'vue'
 import { useUserStore } from '../../stores/user.js'
 import { useRoute, useRouter } from 'vue-router'
+import { loginValidate } from '../../utils/validate.js'
 
-const phone = ref('')
-const password = ref('')
+// const phone = ref('')
+// const password = ref('')
 
 const { userLogin } = useUserStore()
 const router = useRouter()
 const route = useRoute()
+const { errors, meta, isSubmitting, handleSubmit, phone, password } = loginValidate()
 
-async function login() {
+/* async function login() {
   try {
     if (phone.value && password.value) {
       await userLogin({
@@ -96,7 +98,18 @@ async function login() {
   } catch (error) {
     alert(error)
   }
-}
+} */
+const login = handleSubmit(async values => {
+  try {
+    await userLogin({
+      phone: phone.value,
+      password: password.value
+    })
+    router.push(route.query.redirect ?? '/home')
+  } catch (error) {
+    alert(error)
+  }
+})
 </script>
 
 <style lang="less" scoped>

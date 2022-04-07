@@ -6,37 +6,37 @@
         注册新用户
         <span class="go">
           我有账号，去
-          <a href="login.html" target="_blank">登陆</a>
+          <router-link to="/login">登陆</router-link>
         </span>
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
-        <span class="error-msg">错误提示信息</span>
+        <input type="text" name="phone" placeholder="请输入你的手机号" v-model="phone" />
+        <span class="error-msg" v-if="errors.phone">{{ errors.phone }}</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code" />
+        <input type="text" name="code" placeholder="请输入验证码" v-model="code" />
         <button @click="getCode">获取验证码</button>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg" v-if="errors.code && meta.touched">{{ errors.code }}</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="password" placeholder="请输入你的登录密码" v-model="password" />
-        <span class="error-msg">错误提示信息</span>
+        <input type="password" name="password" placeholder="请输入你的登录密码" v-model="password" />
+        <span class="error-msg" v-if="errors.password && meta.touched">{{ errors.password }}</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="password" placeholder="请输入确认密码" v-model="password2" />
-        <span class="error-msg">错误提示信息</span>
+        <input type="password" name="password2" placeholder="请输入确认密码" v-model="password2" />
+        <span class="error-msg" v-if="errors.password2 && meta.touched">{{ errors.password2 }}</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" v-model="agree" />
+        <input name="agree" type="checkbox" v-model="agree" />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg" v-if="errors.agree && meta.touched">{{ errors.agree }}</span>
       </div>
       <div class="btn">
-        <button @click="register">完成注册</button>
+        <button @click="register" :disabled="isSubmitting">完成注册</button>
       </div>
     </div>
 
@@ -63,29 +63,29 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../stores/user.js'
 import { useRouter } from 'vue-router'
+import { registerValidate } from '../utils/validate.js'
 
-const phone = ref('')
-const code = ref('')
-const password = ref('')
-const password2 = ref('')
-const agree = ref(false)
+// const phone = ref('')
+// const code = ref('')
+// const password = ref('')
+// const password2 = ref('')
+// const agree = ref(false)
 
 const { getVerificationCode, userRegister } = useUserStore()
 const { vCode } = storeToRefs(useUserStore())
 const router = useRouter()
+const { phone, code, password, password2, agree, errors, meta, isSubmitting, handleSubmit } = registerValidate()
 
 async function getCode() {
   try {
-    if (phone.value) {
-      await getVerificationCode(phone.value)
-      code.value = vCode.value
-    }
+    await getVerificationCode(phone.value)
+    code.value = vCode.value
   } catch (error) {
     alert(error)
   }
 }
 
-async function register() {
+/* async function register() {
   try {
     if (phone.value && code.value && password.value && password2.value === password.value && agree.value) {
       await userRegister({
@@ -98,7 +98,20 @@ async function register() {
   } catch (error) {
     alert(error)
   }
-}
+} */
+const register = handleSubmit(async values => {
+  try {
+    await userRegister({
+      phone: phone.value,
+      code: code.value,
+      password: password.value
+    })
+    router.push('/login')
+  } catch (error) {
+    alert(error)
+  }
+  // alert(JSON.stringify(values, null, 2))
+})
 </script>
 
 <style lang="less" scoped>
